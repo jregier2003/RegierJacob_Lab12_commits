@@ -29,6 +29,17 @@ if not filtered_data.empty:
 else:
     print("\nNo data available for the selected range.")
 
+filtered_data['trend_change'] = filtered_data['trend'].diff()
+
+
+plt.figure(figsize=(10, 5))
+plt.plot(filtered_data['decimal date'], filtered_data['trend'], label='CO2 Trend (1981-1990)', marker='o')
+plt.xlabel('Decimal Year')
+plt.ylabel('CO2 Trend (ppm)')
+plt.title('Monthly CO2 Trend (1981-1990)')
+plt.legend()
+plt.grid()
+plt.show()
 
 
 
