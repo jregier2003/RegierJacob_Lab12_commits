@@ -42,4 +42,13 @@ plt.grid()
 plt.show()
 
 
+yearly_averages = filtered_data.groupby('actual_year')['average'].mean().reset_index()
+
+plt.figure(figsize=(10, 5))
+plt.bar(yearly_averages['actual_year'], yearly_averages['average'])
+plt.xlabel('Year')
+plt.ylabel('Average CO2 Concentration (ppm)')
+plt.title('Yearly Average CO2 Concentration (1981-1990)')
+plt.grid(axis='y')
+plt.show()
 
