@@ -73,4 +73,13 @@ plt.show()
 print(f"Slope: {slope:.2f} ppm/year")
 print(f"R-squared: {r_value**2:.3f}")
 
+monthly_averages = filtered_data.groupby('month')['average'].mean()
+plt.figure(figsize=(10, 6))
+plt.plot(monthly_averages.index, monthly_averages.values, marker='o', label='Monthly Average CO2 (1981-1990)')
+plt.title('Seasonal Variation in CO2 (1981-1990)')
+plt.xlabel('Month')
+plt.ylabel('Average CO2 Concentration (ppm)')
+plt.legend()
+plt.grid(True)
+plt.show()
 
