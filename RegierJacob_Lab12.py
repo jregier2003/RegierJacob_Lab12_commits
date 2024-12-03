@@ -70,3 +70,7 @@ plt.legend()
 plt.grid()
 plt.show()
 
+print(f"Slope: {slope:.2f} ppm/year")
+print(f"R-squared: {r_value**2:.3f}")
+
+
