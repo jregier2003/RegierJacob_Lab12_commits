@@ -83,3 +83,31 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
+
+polynomial_coefficients = np.polyfit(filtered_data['decimal date'], filtered_data['average'], 2)
+polynomial_fit = np.polyval(polynomial_coefficients, filtered_data['decimal date'])
+filtered_data['residuals'] = filtered_data['average'] - polynomial_fit
+
+plt.figure(figsize=(10, 10))
+plt.subplot(2, 1, 1)
+plt.plot(filtered_data['decimal date'], filtered_data['average'], label='Original Data')
+plt.plot(filtered_data['decimal date'], polynomial_fit, label='Polynomial Fit', linestyle='--')
+plt.title('CO2 Concentration and Polynomial Fit (1981-1990)')
+plt.xlabel('Decimal Year')
+plt.ylabel('CO2 Concentration (ppm)')
+plt.legend()
+plt.grid()
+
+plt.subplot(2, 1, 2)
+plt.plot(filtered_data['decimal date'], filtered_data['residuals'], label='Residuals', color='orange')
+plt.title('Residuals After Polynomial Fit')
+plt.xlabel('Decimal Year')
+plt.ylabel('Residuals (ppm)')
+plt.legend()
+plt.grid()
+
+plt.tight_layout()
+plt.savefig('LastnameFirstname_Lab12_Fig1.png')
+plt.show()
+
+
