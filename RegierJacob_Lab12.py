@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 from scipy.fft import fft, fftfreq
+from scipy.optimize import curve_fit
 
 file_path = '/home/rlinux/VS Code Projects/Lab 12/co2_mm_mlo.csv'
 
@@ -112,35 +113,25 @@ plt.savefig('LastnameFirstname_Lab12_Fig1.png')
 plt.show()
 
 
+fft_values = fft(filtered_data['residuals'].fillna(0))
+frequencies = fftfreq(len(filtered_data), d=(filtered_data['decimal date'].iloc[1] - filtered_data['decimal date'].iloc[0]))
+fft_magnitude = np.abs(fft_values[:len(fft_values)//2])
+dominant_frequency = frequencies[np.argmax(fft_magnitude[:len(frequencies)//2])]
+T_est = 1 / dominant_frequency
 
-residuals = filtered_data['residuals'].values
-N = len(residuals)
-T = filtered_data['decimal date'].diff().mean()  
-frequencies = fftfreq(N, d=T)[:N // 2]
-fft_values = np.abs(fft(residuals))[:N // 2]
-dom_frequency = frequencies[np.argmax(fft_values)]
+def sinusoidal_model(x, A, T, phi):
+    return A * np.sin(2 * np.pi * x / T + phi)
 
-T_est = 1 / dom_frequency
-A_est = residuals.max() - residuals.min()
-phi_estimated = 0 
+popt, _ = curve_fit(sinusoidal_model, filtered_data['decimal date'], filtered_data['residuals'], p0=[2, T_est, 0])
+A_fit, T_fit, phi_fit = popt
 
-filtered_data['sinusoidal_fit'] = A_est * np.sin(2 * np.pi * (filtered_data['decimal date'] / T_est) + phi_estimated)
+filtered_data['sinusoidal_fit'] = sinusoidal_model(filtered_data['decimal date'], A_fit, T_fit, phi_fit)
 plt.figure(figsize=(10, 6))
 plt.plot(filtered_data['decimal date'], filtered_data['residuals'], label='Residuals', color='orange')
-plt.plot(filtered_data['decimal date'], filtered_data['sinusoidal_fit'], label='Sinusoidal Fit', linestyle='--')
-plt.title('Residuals and Sinusoidal Fit (Using Fourier Analysis)')
+plt.plot(filtered_data['decimal date'], filtered_data['sinusoidal_fit'], label='Sinusoidal Fit (Updated)', linestyle='--', color='blue')
+plt.title('Residuals and Updated Sinusoidal Fit')
 plt.xlabel('Decimal Year')
 plt.ylabel('Residuals (ppm)')
 plt.legend()
 plt.grid()
-plt.show()
-
-
-plt.figure(figsize=(10, 6))
-plt.plot(frequencies, fft_values, label='FFT Magnitude')
-plt.title('Frequency Spectrum of Residuals')
-plt.xlabel('Frequency')
-plt.ylabel('Magnitude')
-plt.grid()
-plt.legend()
 plt.show()
