@@ -135,3 +135,29 @@ plt.ylabel('Residuals (ppm)')
 plt.legend()
 plt.grid()
 plt.show()
+
+
+extended_years = np.arange(1981, 2025, 1/12)  # Monthly steps from 1981 to 2025
+extended_polynomial_fit = np.polyval(polynomial_coefficients, extended_years)
+extended_sinusoidal_fit = sinusoidal_model(extended_years, A_fit, T_fit, phi_fit)
+combined_model = extended_polynomial_fit + extended_sinusoidal_fit
+predicted_400_ppm_index = np.where(combined_model >= 400)[0][0]
+predicted_400_ppm_date = extended_years[predicted_400_ppm_index]
+print(f"Predicted date for CO2 reaching 400 ppm: {predicted_400_ppm_date:.2f}")
+actual_400_ppm_date = data[data['average'] >= 400]['decimal date'].min()
+print(f"Actual observed date for CO2 reaching 400 ppm: {actual_400_ppm_date:.2f}")
+
+plt.figure(figsize=(10, 6))
+plt.plot(extended_years, combined_model, label='Combined Model')
+plt.axhline(400, color='red', linestyle='--', label='400 ppm Threshold')
+plt.scatter([predicted_400_ppm_date], [400], color='green', label=f'Predicted: {predicted_400_ppm_date:.2f}', zorder=5)
+plt.scatter([actual_400_ppm_date], [400], color='blue', label=f'Actual: {actual_400_ppm_date:.2f}', zorder=5)
+plt.title('Prediction of 400 ppm CO2 Level')
+plt.xlabel('Year')
+plt.ylabel('CO2 Concentration (ppm)')
+plt.legend()
+plt.grid()
+plt.show()
+
+
+
