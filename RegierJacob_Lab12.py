@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import linregress
 from scipy.fft import fft, fftfreq
 from scipy.optimize import curve_fit
+#Link to github repository: https://github.com/jregier2003/RegierJacob_Lab12_commits.git
 
 # Load the dataset
 file_path = '/home/rlinux/VS Code Projects/Lab 12/co2_mm_mlo.csv'
